@@ -1,0 +1,222 @@
+﻿using System.Collections.Generic;
+using UnityEngine;
+
+public class PoolManager : MonoBehaviour
+{
+    private class UIPool
+    {
+        public RectTransform prefabUIObject;
+        public Queue<RectTransform> availableUIObjectsQueue = new Queue<RectTransform>();
+    }
+    private class Pool
+    {
+        public GameObject prefabObject;
+        public Queue<GameObject> availableObjectsQueue = new Queue<GameObject>();
+    }
+
+    private static PoolManager instance;
+    public static PoolManager Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                instance = FindAnyObjectByType<GameManager>().GetComponent<PoolManager>();
+            }
+            return instance;
+        }
+    }
+
+    private readonly Dictionary<GameObject, Pool> objectPools = new();
+    private readonly Dictionary<GameObject, Pool> activeObjects = new();
+
+    private readonly Dictionary<RectTransform, UIPool> uiObjectPools = new();
+    private readonly Dictionary<RectTransform, UIPool> activeUIObjects = new();
+
+    private void Awake()
+    {
+        if (instance != null && instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        instance = this;
+    }
+
+    public void ClearObjectPools()
+    {
+        foreach (var pool in objectPools.Values)
+        {
+            while (pool.availableObjectsQueue.Count > 0)
+            {
+                GameObject obj = pool.availableObjectsQueue.Dequeue();
+
+                if (obj != null)
+                    Destroy(obj);
+            }
+        }
+
+        foreach (var obj in new List<GameObject>(activeObjects.Keys))
+        {
+            if (obj != null)
+                Destroy(obj);
+        }
+
+        activeObjects.Clear();
+        objectPools.Clear();
+    }
+    public void ClearUIObjectPools()
+    {
+        foreach (var pool in uiObjectPools.Values)
+        {
+            while (pool.availableUIObjectsQueue.Count > 0)
+            {
+                RectTransform obj = pool.availableUIObjectsQueue.Dequeue();
+
+                if (obj != null)
+                    Destroy(obj.gameObject);
+            }
+        }
+
+        foreach (var obj in new List<RectTransform>(activeUIObjects.Keys))
+        {
+            if (obj != null)
+                Destroy(obj.gameObject);
+        }
+
+        activeUIObjects.Clear();
+        uiObjectPools.Clear();
+    }
+
+    public GameObject Get(GameObject prefab)
+    {
+        if (!objectPools.TryGetValue(prefab, out Pool pool))
+        {
+            pool = CreatePool(prefab);
+        }
+
+        GameObject obj = null;
+
+        while (pool.availableObjectsQueue.Count > 0)
+        {
+            obj = pool.availableObjectsQueue.Dequeue();
+
+            if (obj != null)
+                break;
+
+            obj = null;
+        }
+
+        if (obj == null)
+        {
+            ExpandPool(pool);
+            obj = pool.availableObjectsQueue.Dequeue();
+        }
+
+        activeObjects[obj] = pool;
+        obj.SetActive(true);
+        return obj;
+    }
+    public void Release(GameObject obj)
+    {
+        if (obj == null) return;
+
+        if (!activeObjects.TryGetValue(obj, out Pool pool))
+        {
+            Destroy(obj);
+            return;
+        }
+
+        activeObjects.Remove(obj);
+
+        obj.SetActive(false);
+        pool.availableObjectsQueue.Enqueue(obj);
+    }
+    private Pool CreatePool(GameObject prefab)
+    {
+        Pool pool = new Pool();
+        pool.prefabObject = prefab;
+        int size = 10; // Initial size of the pool
+        for (int i = 0; i < size; i++)
+        {
+            GameObject obj = Instantiate(pool.prefabObject);
+            obj.SetActive(false);
+
+            pool.availableObjectsQueue.Enqueue(obj);
+        }
+        objectPools.Add(prefab, pool);
+        return pool;
+    }
+    private void ExpandPool(Pool pool)
+    {
+        GameObject obj = Instantiate(pool.prefabObject);
+        obj.SetActive(false);
+        pool.availableObjectsQueue.Enqueue(obj);
+    }
+
+    public RectTransform Get(RectTransform prefab, RectTransform parentUIObject)
+    {
+        if (!uiObjectPools.TryGetValue(prefab, out UIPool uiPool))
+        {
+            uiPool = CreatePool(prefab, parentUIObject);
+        }
+
+        RectTransform uiObject = null;
+
+        while (uiPool.availableUIObjectsQueue.Count > 0)
+        {
+            uiObject = uiPool.availableUIObjectsQueue.Dequeue();
+            if (uiObject != null)
+                break;
+
+            uiObject = null;
+        }
+
+        if (uiObject == null)
+        {
+            ExpandPool(uiPool, parentUIObject);
+            uiObject = uiPool.availableUIObjectsQueue.Dequeue();
+        }
+
+        uiObject.SetParent(parentUIObject, false);
+
+        activeUIObjects[uiObject] = uiPool;
+        uiObject.gameObject.SetActive(true);
+        return uiObject;
+    }
+    public void Release(RectTransform uiObj)
+    {
+        if (uiObj == null) return;
+
+        if (!activeUIObjects.TryGetValue(uiObj, out UIPool uiPool))
+        {
+            Destroy(uiObj.gameObject);
+            return;
+        }
+
+        activeUIObjects.Remove(uiObj);
+        uiObj.gameObject.SetActive(false);
+        uiPool.availableUIObjectsQueue.Enqueue(uiObj);
+    }
+    private UIPool CreatePool(RectTransform prefab, RectTransform parentUIObject)
+    {
+        UIPool uiPool = new UIPool();
+        uiPool.prefabUIObject = prefab;
+        int size = 10; // Initial size of the pool
+        for (int i = 0; i < size; i++)
+        {
+            RectTransform uiObj = Instantiate(uiPool.prefabUIObject, parentUIObject);
+            uiObj.gameObject.SetActive(false);
+
+            uiPool.availableUIObjectsQueue.Enqueue(uiObj);
+        }
+        uiObjectPools.Add(prefab, uiPool);
+        return uiPool;
+    }
+    private void ExpandPool(UIPool pool, RectTransform parentUIObject)
+    {
+        RectTransform uiObj = Instantiate(pool.prefabUIObject, parentUIObject);
+        uiObj.gameObject.SetActive(false);
+        pool.availableUIObjectsQueue.Enqueue(uiObj);
+    }
+}

@@ -6,7 +6,7 @@ public static class ObserverManager
 {
     private static Dictionary<Type, List<Delegate>> observers = new Dictionary<Type, List<Delegate>>();
 
-    public static void RegisterObserver<T>(Action<T> callback)
+    public static void Register<T>(Action<T> callback)
     {
         Type type = typeof(T);
 
@@ -16,7 +16,7 @@ public static class ObserverManager
         observers[type].Add(callback);
     }
 
-    public static void UnregisterObserver<T>(Action<T> callback)
+    public static void Unregister<T>(Action<T> callback)
     {
         Type type = typeof(T);
 
@@ -42,7 +42,7 @@ public static class ObserverManager
             } 
             catch (Exception ex)
             { 
-                
+                Debug.LogWarning(ex);
             }
         }
     }

@@ -14,7 +14,8 @@ public class PlayerController : MonoBehaviour, IUpdatable
 
     public void OnDisable()
     {
-        GameManager.Instance.Unregister(this);
+        if (GameManager.Instance != null)
+            GameManager.Instance.Unregister(this);
     }
 
     public void OnFixedUpdate() { }
