@@ -1,15 +1,11 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
-using static Unity.Cinemachine.CinemachinePathBase;
 
 public class PlayerManager : MonoBehaviour, IUpdatable
 {
-    public static Dictionary<int, (string, string, int)> characters = new Dictionary<int, (string, string, int)>();
-
     [SerializeField] private GameObject playerPrefab;
 
-    public static int idPlayer = -1;
+    public static int idPlayer = 0;
     public static GameObject player;
 
     public void OnDisable()
@@ -35,13 +31,13 @@ public class PlayerManager : MonoBehaviour, IUpdatable
         if (player == null && SceneManager.GetActiveScene().name == "Map1")
         {
             player = PoolManager.Instance.Get(playerPrefab);
-            player.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>($"Sprites/Appearance/{PlayerManager.characters[idPlayer].Item2}");
+            player.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>($"Sprites/Appearance/{CacheManager.characters[idPlayer].appearance}");
         }
     }
 
     private void InitPlayer()
     {
-        if (idPlayer != -1)       
+        if (idPlayer != 0)       
             SceneManager.LoadScene("Map1");
     }
 }
