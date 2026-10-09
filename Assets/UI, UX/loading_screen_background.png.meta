@@ -3,8 +3,8 @@ guid: 721752580a6870a4e83a9c68dca8db41
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 7343152748788764925
-    second: loading_screen_background_0
+      213: 21300002
+    second: LoginBackground16x9
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -75,7 +75,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -100,42 +100,42 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: loading_screen_background_0
+      name: LoginBackground16x9
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 1919
-        height: 1080
+        x: 7
+        y: 4
+        width: 1904
+        height: 1071
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
+      customData:
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: df0dcf2f48e18e560800000000000000
-      internalID: 7343152748788764925
+      spriteID: 8c9389a6ab09db651843519d7c0ec4d3
+      internalID: 21300002
       vertices: []
-      indices: 
+      indices:
       edges: []
       weights: []
     outline: []
-    customData: 
+    customData:
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
-    indices: 
+    indices:
     edges: []
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      loading_screen_background_0: 7343152748788764925
+      LoginBackground16x9: 21300002
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
