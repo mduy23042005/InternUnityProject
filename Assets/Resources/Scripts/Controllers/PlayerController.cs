@@ -1,11 +1,11 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour, IUpdatable
 {
-    [SerializeField] private float _moveSpeed = 6f;
+    [SerializeField] private float moveSpeed = 6f;
 
-    private Vector2 _movement;
+    private Vector2 movement;
 
     public void OnEnable()
     {
@@ -28,9 +28,7 @@ public class PlayerController : MonoBehaviour, IUpdatable
         {
             Vector3 mouseWorldPosition = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
 
-            _movement = mouseWorldPosition;
-
-            this.transform.position = Vector2.MoveTowards(transform.position, _movement, _moveSpeed * Time.deltaTime);
+            this.transform.position = Vector2.MoveTowards(transform.position, mouseWorldPosition, moveSpeed * Time.deltaTime);
         }
     }
 }
