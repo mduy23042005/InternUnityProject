@@ -56,7 +56,7 @@ TagManager:
   - name: FrontWalls
     uniqueID: 1289369143
     locked: 0
-  - name: Roof
+  - name: Roofs
     uniqueID: 270582003
     locked: 0
   m_RenderingLayers:
