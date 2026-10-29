@@ -44,19 +44,28 @@ TagManager:
   - name: Ground
     uniqueID: 1002680211
     locked: 0
+  - name: Stone
+    uniqueID: 679246345
+    locked: 0
+  - name: Grass
+    uniqueID: 4053431299
+    locked: 0
+  - name: Flora
+    uniqueID: 311613343
+    locked: 0
   - name: Foundation
     uniqueID: 2168107605
     locked: 0
-  - name: BackWalls
+  - name: BackWalls&Roofs
     uniqueID: 521717569
     locked: 0
-  - name: Player
+  - name: Player&Obstacle
     uniqueID: 1681845721
     locked: 0
-  - name: FrontWalls
+  - name: FrontWalls&Roofs
     uniqueID: 1289369143
     locked: 0
-  - name: Roofs
+  - name: Roof
     uniqueID: 270582003
     locked: 0
   m_RenderingLayers:
